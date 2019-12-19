@@ -57,6 +57,13 @@ class Protocol():
 
         self.N, self.x, self.T, self.y = out_v
 
-        return verifier.check()
+         res=verifier.check()
+        
+        if res == ACCEPT:
+            print('Accept')
+        else:
+            print('Reject')
+            
+        return res
         
 
