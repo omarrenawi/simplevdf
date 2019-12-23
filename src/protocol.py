@@ -42,22 +42,22 @@ class Protocol():
         while not self.T == 1:
             m = self.prover.get_m()
            
-            verifier.set_m(m)
+            self.verifier.set_m(m)
 
-            r = verifier.gen_rand()
+            r = self.verifier.gen_rand()
 
-            prover.set_rand(r)
+            self.prover.set_rand(r)
 
             out_v= self.verifier.halve()
 
             out_p= self.prover.halve()
 
-            if not out_p == out_b:
+            if not out_p == out_v:
                 return ERROR
 
         self.N, self.x, self.T, self.y = out_v
 
-         res=verifier.check()
+        res=self.verifier.check()
         
         if res == ACCEPT:
             print('Accept')
