@@ -1,8 +1,7 @@
-from cryptography import *
-from utils import *
+from src.protocol.utils import *
 
 class Prover():
-    def __init__(self,N,T,x,s):
+    def __init__(self, N, T, x, s):
         self.N=N
         self.T=T
         self.x=x
@@ -10,7 +9,7 @@ class Prover():
     
     
     def solve(self):
-        self.y= pow(pow(x,2,N),T,N)
+        self.y= pow(pow(self.x, 2, self.N), self.T, self.N)
         return self.y
 
 
@@ -24,18 +23,18 @@ class Prover():
 
     def set_rand(self,r):
 
-        self.r=r
+        self.r =r
 
     def halve(self):
 
-        self.x= (pow(self.x,self.r,self.N) * self.m ) % self.N
+        self.x = (pow(self.x,self.r,self.N) * self.m ) % self.N
 
-        self.y= (pow(self.m,self.r,self.N) * self.y ) % self.N
+        self.y = (pow(self.m,self.r,self.N) * self.y ) % self.N
 
         if div(self.T, 2) % 2 == 0:
             return self.N,self.x,div(self.T,2), self.y
         
-        self.y=pow(self.y,2,self.N)
+        self.y =pow(self.y,2,self.N)
 
         self.T= div((self.T+1),2)
 

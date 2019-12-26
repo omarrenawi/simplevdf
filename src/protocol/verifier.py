@@ -1,5 +1,5 @@
 from secrets import randbelow
-
+from src.protocol.utils import *
 class Verifier():
     
     def __init__(self,N,x,T,y,s):
@@ -12,15 +12,15 @@ class Verifier():
 
     def gen_rand(self):
         self.r= randbelow(2**self.s)
+
         return self.r
 
-    def set_m(m):
-        #assert m in QRN+
-        self.m=m
+
+    def set_m(self,m): #assert m in QRN+
+        self.m = m
         
     def check(self):
-        
-        assert T==1
+        assert self.T==1
         #otherwise, the halving protocol must continue
         
         return self.y == pow(self.x,2,self.N)

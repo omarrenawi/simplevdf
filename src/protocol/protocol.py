@@ -1,6 +1,5 @@
-from prover import *
-from verifier import *
-from utils import *
+from src.protocol.prover import *
+from src.protocol.verifier import *
 import gensafeprime
 
 ACCEPT=1
