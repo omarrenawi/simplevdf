@@ -1,6 +1,6 @@
 from src.protocol.prover import *
 from src.protocol.verifier import *
-import gensafeprime
+
 
 ACCEPT=1
 REJECT=-1
@@ -9,27 +9,28 @@ ERROR=-2
 
 class Protocol():
 
-    def __init__(self,T,x,N,s):
-        self.T=T
-        self.x=x
-        self.s=s #statistical security parameter
-        self.gen_N()
+    def __init__(self, T, x, s):
+        self.T = T
+        self.x = x
+        self.s = s #statistical security parameter
+        self.N = self.gen_N()
+        self.prover = Prover(self.N, self.T, self.x)
+        self.verifier = Verifier(self.N, self.x, self.T, self.y, self.s)
+
+    def comp(self):
+        return self.prover.solve()
+
+    def vf(self):
+        return self.verifier.check()
 
 
-    def gen_N(self,b=4096):
-        p=gensafeprime.generate(b//2)
-        q=gensafeprime.generate(b//2)
-        self.N=p*q
 
-
-    def run(self): 
-        self.prover=Prover(self.N,self.T,self.x)
-        self.y=self.prover.solve()
-        self.verifier=Verifier(self.N,self.x,self.T,self.y,self.s)
-        
+    def run(self):
+        self.y = self.comp()
         return self.halving_protocol()
 
-   
+
+
     def halving_protocol(self):
         
         """
@@ -56,10 +57,11 @@ class Protocol():
 
         self.N, self.x, self.T, self.y = out_v
 
-        res=self.verifier.check()
+        res = self.vf()
         
         if res == ACCEPT:
             print('Accept')
+
         else:
             print('Reject')
             

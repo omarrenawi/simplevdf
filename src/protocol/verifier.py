@@ -40,5 +40,3 @@ class Verifier():
         self.T= div((self.T+1),2)
 
         return self.N, self.x,self.T,pow(self.y,2,self.N)
-
-    
