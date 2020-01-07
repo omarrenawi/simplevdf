@@ -22,22 +22,21 @@ class Prover():
 
 
     def set_rand(self,r):
-
         self.r =r
 
-    def halve(self):
+    def halve(self, N, x, T, y):
 
-        self.x = (pow(self.x,self.r,self.N) * self.m ) % self.N
+        x = (pow(x, self.r, N) * self.m) % N
 
-        self.y = (pow(self.m,self.r,self.N) * self.y ) % self.N
+        y = (pow(self.m, self.r, N) * y) % N
 
-        if div(self.T, 2) % 2 == 0:
-            return self.N,self.x,div(self.T,2), self.y
+        if div(T, 2) % 2 == 0:
+            return N, x, div(T, 2), y
         
-        self.y =pow(self.y,2,self.N)
+        y = pow(y, 2, N)
 
-        self.T= div((self.T+1),2)
+        T = div((T+1),2)
 
-        return self.N, self.x,self.T,pow(self.y,2,self.N)
+        return N, x, T, pow(y, 2, N)
 
 

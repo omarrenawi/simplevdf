@@ -1,6 +1,7 @@
 import math
 import gensafeprime
 
+
 def div(a,b):
     return math.ceil(a/b)
 
@@ -35,8 +36,7 @@ def jacobi(x, n):
     else:
         return 0
 
-
-    def gen_N(self,b=4096):
-        p = gensafeprime.generate(b//2)
-        q = gensafeprime.generate(b//2)
-        return p*q
+def gen_N(b=4096):
+    p = gensafeprime.generate(b//2)
+    q = gensafeprime.generate(b//2)
+    return p*q

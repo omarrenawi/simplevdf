@@ -1,6 +1,6 @@
 from src.protocol.prover import *
 from src.protocol.verifier import *
-
+from src.protocol.utils import *
 
 ACCEPT=1
 REJECT=-1
@@ -12,24 +12,20 @@ class Protocol():
     def __init__(self, T, x, s):
         self.T = T
         self.x = x
-        self.s = s #statistical security parameter
-        self.N = self.gen_N()
+        self.s = s      #statistical security parameter
+        self.N = gen_N()
         self.prover = Prover(self.N, self.T, self.x)
         self.verifier = Verifier(self.N, self.x, self.T, self.y, self.s)
 
     def comp(self):
         return self.prover.solve()
 
-    def vf(self):
-        return self.verifier.check()
-
-
+    def setup(self, n=4096): # n ?!
+        return gen_N(n)
 
     def run(self):
         self.y = self.comp()
         return self.halving_protocol()
-
-
 
     def halving_protocol(self):
         
