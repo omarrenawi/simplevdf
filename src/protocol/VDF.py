@@ -44,6 +44,8 @@ def prov(N, x, T, y):
         xn=xn**r ° pi[i]
         yn = pi[i] ** r ° yn
 
+    return pi
+
 
 
 
