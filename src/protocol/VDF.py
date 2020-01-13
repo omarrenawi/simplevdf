@@ -6,7 +6,7 @@ import hashlib
 ACCEPT=1
 REJECT=-1
 ERROR=-2
-
+s = None #statistical security parameter
 
 def setup(s):
     """
@@ -16,7 +16,7 @@ def setup(s):
 
 
 def gen(N, T):
-    ...  # TODO: generate x
+    return generate_rand_residue(N)
 
 
 def comp(N, x, T):
@@ -40,22 +40,29 @@ def prov(N, x, T, y):
         h.update(tmp.encode())
         dig=h.hexdigest()
         h=hashlib.sha_256()
-        r= int(dig, 16) #TODO % 2**s
-        xn=xn**r ° pi[i]
-        yn = pi[i] ** r ° yn
+        r= int(dig, 16) % s
+        xn= (xn**r, pi[i], N)
+        yn = (pi[i]** r, yn, N)
 
     return pi
 
 
-
-
-
-
-
 def verify(N, x, T, y, pi):
-    #TODO assert x and y and all elements in pi are in QRN+
+
+    if not assert_mem(x,N):
+        return REJECT
+
+    if not assert_mem(y,N):
+        return REJECT
+
+    for i in pi:
+        if not assert_mem(i, N):
+            return REJECT
+
+
     xn, yn= x, y
-    t = math.log(T, 2)
+
+    t = math.log(T, 2) # as input
 
     for i in range(1,t):
         tup = (xn, div(T, 2**i), yn, pi[i])
@@ -64,13 +71,11 @@ def verify(N, x, T, y, pi):
         h.update(tmp.encode())
         hs =h.hexdigest()
         r  = int(hs, 16)
-        xn = xn **r ° pi[i]
-        yn = pi[i]**r ° yn
+        xn = mul(xn **r, pi[i], N)
+        yn = mul(pi[i]**r, yn, N)
 
     if yn == xn **2: #mod?
         print('ACCEPT')
         return ACCEPT
     print('REJECT')
     return REJECT
-
-    ...
