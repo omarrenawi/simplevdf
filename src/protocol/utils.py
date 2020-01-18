@@ -2,12 +2,12 @@ import math
 import gensafeprime
 from secrets import randbelow
 
-def div(a,b):
-    return math.ceil(a/b)
+
+def div(a, b):
+    return math.ceil(a / b)
 
 
 # https://www.researchgate.net/publication/2273750_A_Binary_Algorithm_for_the_Jacobi_Symbol
-
 def jacobi(x, n):
     assert x >= 0 and n > 0 and n % 2 != 0
 
@@ -38,28 +38,44 @@ def jacobi(x, n):
 
 
 def gen_N(b=4096):
-    p = gensafeprime.generate(b//2)
-    q = gensafeprime.generate(b//2)
-    return p*q
+    p = gensafeprime.generate(b // 2)
+    q = gensafeprime.generate(b // 2)
+    return p * q
 
 
 def mul(a, b, N):
     return math.abs((a * b) % N)
 
 
-#represent x as {−(N − 1)/2, . . . , (N − 1)/2}
-def encode(x, N):
-    assert x > -1  and x <= N
+# represent x as {−(N − 1)/2, . . . , (N − 1)/2}
+def enc(x, N):
+    assert -1 < x <= N
     return x - (N - 1) / 2
 
 
-def assert_mem(a, N): # ensure the membership of a in QRN+
-    a = encode(a, N)
+# ensure the membership of a in QRN+
+def assert_mem(a, N):
+    a = enc(a, N)
     return a >= 0 and jacobi(a, N) == 1
 
 
 def generate_rand_residue(N):
-    tmp=randbelow(N)
+    tmp = randbelow(N)
     while not assert_mem(tmp, N):
-        tmp=randbelow(N)
+        tmp = randbelow(N)
+
     return tmp
+
+
+def reject():
+    print("REJECTED!")
+    return -1
+
+
+def accept():
+    print("ACCEPTED")
+
+
+def error():
+    print("ERROR")
+    return -2

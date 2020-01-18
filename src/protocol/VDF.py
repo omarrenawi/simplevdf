@@ -1,48 +1,53 @@
 from src.protocol.utils import *
-from secrets import randbelow
+
 import hashlib
 
+s = None  # statistical security parameter
 
-ACCEPT=1
-REJECT=-1
-ERROR=-2
-s = None #statistical security parameter
 
 def setup(s):
     """
-    s: statistical security parameter
+    @input: s: statistical security parameter
+    @output: N
     """
-    return gen_N()
+    return gen_N() ## and s?!
 
 
-def gen(N, T):
+def gen(N):
     return generate_rand_residue(N)
 
 
-def comp(N, x, T):
+def comp(N, x, T):  # solution of the RSW time-lock puzzle (but over (QR+N, ◦) not (Z∗N , ·))
     return pow(pow(x, 2, N), T, N)
 
+
 def prov(N, x, T, y):
-    """
-    for the fiat shamir heuristic we will use sha256
-    """
-    h=hashlib.sha_256()
 
+    """ for the Fiat Shamir heuristic we will use sha256
+    """
+    h = hashlib.sha_256()
 
-    t=math.log(T,2)
-    xn, yn= x, y
-    pi=[].append(None) # fill the 0'th index
-    for i in range(1,t):
-        tmp = pow(xn, (pow(2, div(T, 2**i), N)), N) #assert in QRN+
+    t = math.log(T,2)
+
+    xn, yn = x, y
+
+    # fill the 0'th index
+    pi = [].append(None)
+    for i in range(1, t):
+        tmp = pow(xn, (pow(2, div(T, 2**i), N)), N)
+
+        if not assert_mem(tmp,N):
+            return reject()
+
         pi.append(tmp)
-        tmp=(xn, div(T, 2**(i-1)),yn,pi[i])
+        tmp = (xn, div(T, 2**(i-1)), yn, pi[i])
         tmp = "".join(tmp)
         h.update(tmp.encode())
-        dig=h.hexdigest()
-        h=hashlib.sha_256()
-        r= int(dig, 16) % s
-        xn= (xn**r, pi[i], N)
-        yn = (pi[i]** r, yn, N)
+        dig = h.hexdigest()
+        h = hashlib.sha_256()
+        r = int(dig, 16) % (2 ** s)
+        xn = mul(pow(xn, r, N), pi[i], N)
+        yn = mul(pow(pi[i], r, N), yn, N)
 
     return pi
 
@@ -50,32 +55,30 @@ def prov(N, x, T, y):
 def verify(N, x, T, y, pi):
 
     if not assert_mem(x,N):
-        return REJECT
+        return reject()
 
     if not assert_mem(y,N):
-        return REJECT
+        return reject()
 
     for i in pi:
         if not assert_mem(i, N):
-            return REJECT
+            return reject()
 
+    xn, yn = x, y
 
-    xn, yn= x, y
+    t = math.log(T, 2)
 
-    t = math.log(T, 2) # as input
-
-    for i in range(1,t):
+    for i in range(1, t):
         tup = (xn, div(T, 2**i), yn, pi[i])
         tmp = "".join(tup)
         h = hashlib.sha_256()
         h.update(tmp.encode())
-        hs =h.hexdigest()
-        r  = int(hs, 16)
-        xn = mul(xn **r, pi[i], N)
-        yn = mul(pi[i]**r, yn, N)
+        hs = h.hexdigest()
+        r = int(hs, 16) % (2 ** s)
+        xn = mul(pow(xn, r, N), pi[i], N)
+        yn = mul(pow(pi[i], r, N), yn, N)
 
-    if yn == xn **2: #mod?
-        print('ACCEPT')
-        return ACCEPT
-    print('REJECT')
-    return REJECT
+    if yn == xn **2:  # mod?
+        return accept()
+
+    return reject()
