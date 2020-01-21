@@ -74,6 +74,7 @@ def reject():
 
 def accept():
     print("ACCEPTED")
+    return 0
 
 
 def error():
