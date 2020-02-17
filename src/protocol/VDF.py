@@ -2,78 +2,104 @@ from src.protocol.utils import *
 
 import hashlib
 
-s = None  # statistical security parameter
+s = 2  # statistical security parameter
 
 
 def setup(s):
     """
-    @input: s: statistical security parameter
-    @output: N
+
+    input: s: statistical security parameter
+    output: N
     """
     return gen_N(2 * s)  # can be change
 
 
 def gen(N):
+    """
+
+    :param N: Modulus N
+    :return: x in QR+_{N}
+    """
     return generate_rand_residue(N)
 
 
-def comp(N, x, T):  # solution of the RSW time-lock puzzle (but over (QR+N, ◦) not (Z∗N , ·))
-    return pow(pow(x, 2, N), T, N)
+def comp(N, x, T):
+    """
+     solution of the RSW time-lock puzzle (but over (QR+_{N}, ◦) not (Z∗_{N}, ·))
+    :param N: Modulus
+    :param x: random integer in QRN+_{N}
+    :param T:
+    :return: x**(2**T) in QR+_{N}
+    """
+    print("Solving ...")
+    res = pow(pow(x, 2, N), T, N)
+    res= abs(res)
+    print("done")
+    return res
 
 
 def prov(N, x, T, y):
 
-    """ for the Fiat Shamir heuristic we will use sha256
-    """
-    h = hashlib.sha256()
 
+
+    print("Proving ...")
+
+    # for the Fiat Shamir heuristic we will use sha256
+    h = hashlib.sha256()
     t = int(math.log(T, 2))
+    assert (2 **t) == T and assert_mem(y, N)
 
     xn, yn = x, y
 
-    # fill the 0'th index
-    pi = [].append(None)
-    for i in range(1, t):
-        tmp = pow(xn, (pow(2, div(T, 2**i), N)), N)
+    pi=[]
+
+    for i in range(t):
+
+        pwr = abs (pow(2, T // (2 ** (i+1)), N))
+        tmp = abs (pow(xn, pwr, N))
 
         if not assert_mem(tmp, N):
+            print(1)
             return reject()
 
         pi.append(tmp)
-        tmp = (xn, div(T, 2**(i-1)), yn, pi[i])
-        tmp = "".join(tmp)
+        tmp = "{}{}{}{}".format(xn, div(T, 2**(i)), yn, pi[i])
         h.update(tmp.encode())
         dig = h.hexdigest()
         h = hashlib.sha256()
-        r = int(dig, 16) % (2 ** s)
+        r = int(dig, 16)# % (2 ** s)
         xn = mul(pow(xn, r, N), pi[i], N)
         yn = mul(pow(pi[i], r, N), yn, N)
+
+    print("done")
 
     return pi
 
 
 def verify(N, x, T, y, pi):
 
+    print("Verifying ... ")
+
     if not assert_mem(x, N):
-        print(1)
+        print("{} is not member in {}".format(x, N))
         return reject()
 
     if not assert_mem(y, N):
-        print(2, y, N)
+        print("{} is not member in {}".format(y, N))
+        print("y= %d, N=%d " %(y, N))
         return reject()
 
     for i in pi:
         if not assert_mem(i, N):
-            print(3)
+            print("i = {} is not a member in {}".format(i, N))
             return reject()
 
     xn, yn = x, y
 
     t = int(math.log(T, 2))
 
-    for i in range(1, t):
-        tup = (xn, div(T, 2**i), yn, pi[i])
-        tmp = "".join(tup)
+    for i in range(t):
+        tmp = "{}{}{}{}".format(xn, div(T, 2**(i+1)), yn, pi[i])
         h = hashlib.sha256()
         h.update(tmp.encode())
         hs = h.hexdigest()
@@ -81,7 +107,8 @@ def verify(N, x, T, y, pi):
         xn = mul(pow(xn, r, N), pi[i], N)
         yn = mul(pow(pi[i], r, N), yn, N)
 
-    if yn == xn ** 2:  # mod?
+    if yn == (xn ** 2) % N:  # mod?
         return accept()
-    print(4)
+
+    print("verification failed!\n{} != {}".format(yn, (xn**2 ) % N))
     return reject()

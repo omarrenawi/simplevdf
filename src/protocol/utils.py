@@ -3,9 +3,6 @@ import gensafeprime
 from secrets import randbelow
 
 
-def div(a, b):
-    return math.ceil(a / b)
-
 
 # https://www.researchgate.net/publication/2273750_A_Binary_Algorithm_for_the_Jacobi_Symbol
 def jacobi(x, n):
@@ -44,7 +41,11 @@ def gen_N(b=4096):
 
 
 def mul(a, b, N):
-    return math.abs((a * b) % N)
+    return abs((a * b) % N)
+
+
+def div(a, b):
+    return math.ceil(a / b)
 
 
 # represent x as {−(N − 1)/2, . . . , (N − 1)/2}
@@ -55,7 +56,7 @@ def enc(x, N):
 
 # ensure the membership of a in QRN+
 def assert_mem(a, N):
-    a = enc(a, N)
+    #a = enc(a, N)
     return a >= 0 and jacobi(a, N) == 1
 
 
