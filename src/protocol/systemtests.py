@@ -1,7 +1,7 @@
 from src.protocol.VDF import *
 
-T = 2 ** 50
-N = setup(512)
+T = 2 ** 11
+N = setup(64)
 x = gen(N)
 """
 for i in range(100):

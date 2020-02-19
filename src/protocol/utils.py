@@ -4,8 +4,13 @@ from secrets import randbelow
 
 
 
-# https://www.researchgate.net/publication/2273750_A_Binary_Algorithm_for_the_Jacobi_Symbol
 def jacobi(x, n):
+    """
+
+     https://www.researchgate.net/publication/2273750_A_Binary_Algorithm_for_the_Jacobi_Symbol
+    :return: jacobi symbol of x in n
+    """
+
     assert x >= 0 and n > 0 and n % 2 != 0
 
     j = 1
@@ -41,11 +46,12 @@ def gen_N(b=4096):
 
 
 def mul(a, b, N):
-    return abs((a * b) % N)
+    return abs(((a % N) * (b % N)) % N)
 
 
 def div(a, b):
-    return math.ceil(a / b)
+    return a // b
+   # return math.ceil(a / b)
 
 
 # represent x as {−(N − 1)/2, . . . , (N − 1)/2}
@@ -61,6 +67,10 @@ def assert_mem(a, N):
 
 
 def generate_rand_residue(N):
+    """
+    Generate a random quadratic residue x
+    """
+
     tmp = randbelow(N)
     while not assert_mem(tmp, N):
         tmp = randbelow(N)
