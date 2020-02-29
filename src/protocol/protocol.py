@@ -31,7 +31,7 @@ class Protocol():
         
         """
         with big value of T it could be 
-        problematici(for the memory) to use a
+        problematic(for the memory) to use a
         recursion, therefore I'll use a normal loop
         """
       
@@ -56,11 +56,10 @@ class Protocol():
         res = self.vf()
         
         if res == ACCEPT:
-            print('Accept')
+            return accept()
 
         else:
-            print('Reject')
-            
-        return res
+            return reject()
+
         
 
