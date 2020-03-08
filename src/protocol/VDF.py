@@ -1,4 +1,4 @@
-from src.protocol.utils import *
+from utils import *
 
 import hashlib
 
@@ -25,24 +25,18 @@ def gen(N):
 
 def comp(N, x, T):
     """
-     solution of the RSW time-lock puzzle (but over (QR+_{N}, ◦) not (Z∗_{N}, ·))
+     solution of the RSW time-lock puzzle (but over (QR+N, .) not (Z*N, .))
     :param N: Modulus
     :param x: random integer in QRN+_{N}
     :param T:
     :return: x**(2**T) in QR+_{N}
     """
-    print("Solving ...")
     res = pow(x, 2**T, N)
     res= abs(res)
-    print("done")
     return res
 
 
 def prov(N, x, T, y):
-
-
-
-    print("Proving ...")
 
     # for the Fiat Shamir heuristic we will use sha256
     h = hashlib.sha256()
@@ -72,15 +66,10 @@ def prov(N, x, T, y):
         xn = mul(pow(xn, r, N), pi[i], N)
         yn = mul(pow(pi[i], r, N), yn, N)
 
-    print("done")
 
     return pi
 
-
 def verify(N, x, T, y, pi):
-
-    print("Verifying ... ")
-
     if not assert_mem(x, N):
         print("{} is not member in {}".format(x, N))
         return reject()
@@ -100,6 +89,8 @@ def verify(N, x, T, y, pi):
     t = int(math.log(T, 2))
 
     for i in range(t):
+        # debug print for index out of range error
+        # print("len of pi :", len(pi), "but tried to access with t :", t)
         tmp = "{}{}{}{}".format(xn, div(T, 2**(i)), yn, pi[i])
         h = hashlib.sha256()
         h.update(tmp.encode())

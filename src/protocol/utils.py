@@ -80,14 +80,14 @@ def generate_rand_residue(N):
 
 def reject():
     print("REJECTED!")
-    return -1
+    return False
 
 
 def accept():
-    print("ACCEPTED")
-    return 0
+    #print("ACCEPTED")
+    return True
 
 
 def error():
     print("ERROR")
-    return -2
+    return False

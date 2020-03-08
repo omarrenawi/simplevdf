@@ -1,5 +1,5 @@
 from secrets import randbelow
-from src.protocol.utils import *
+from utils import *
 class Verifier():
     
     def __init__(self,N,x,T,y,s):

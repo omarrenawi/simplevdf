@@ -1,6 +1,6 @@
-from src.protocol.prover import *
-from src.protocol.verifier import *
-from src.protocol.utils import *
+from prover import *
+from verifier import *
+from utils import *
 
 ACCEPT=1
 REJECT=-1

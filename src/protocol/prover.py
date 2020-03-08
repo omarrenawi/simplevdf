@@ -1,4 +1,4 @@
-from src.protocol.utils import *
+from utils import *
 
 class Prover():
     def __init__(self, N, T, x, s):
