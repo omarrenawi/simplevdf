@@ -40,30 +40,18 @@ def jacobi(x, n):
 
 
 def gen_N(b=4096):
-    """
-
-    :param b: size of N in bits
-    :return: b bits Modulus N
-    """
     p = gensafeprime.generate(b // 2)
     q = gensafeprime.generate(b // 2)
     return p * q
 
 
 def mul(a, b, N):
-    """
-
-    :return: a * b in QRN+
-    """
     return abs(((a % N) * (b % N)) % N)
 
 
 def div(a, b):
-    """
-
-    :return:⎡ a / b ⎤
-    """
-    return math.ceil(a / b)
+    return a // b
+   # return math.ceil(a / b)
 
 
 # represent x as {−(N − 1)/2, . . . , (N − 1)/2}
@@ -72,13 +60,9 @@ def enc(x, N):
     return x - (N - 1) / 2
 
 
-
+# ensure the membership of a in QRN+
 def assert_mem(a, N):
-    """
-
-    :return: True iff a is quadratic residue in QRN+
-    """
-    #a = enc(a, N) #TODO!!
+    #a = enc(a, N)
     return a >= 0 and jacobi(a, N) == 1
 
 
