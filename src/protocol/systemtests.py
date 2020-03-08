@@ -3,6 +3,7 @@ from VDF import *
 from parallel_scheme import *
 
 
+<<<<<<< HEAD
 """
 for i in range(100):
     x = gen(N)
@@ -55,5 +56,13 @@ def detailed_output(T, N, x):
 T = 2 ** 26
 N = setup(64)
 x = gen(N)
+=======
+T = 2 ** 10
+N = setup(2048)
+x = gen(N)
+y = comp(N, x, T)
+pi = prov(N, x, T, y)
+verify(N, x, T, y, pi)
+>>>>>>> 23a28786ce122d67c2d20ef16bd0f857657f04ba
 
 detailed_output(T, N, x)

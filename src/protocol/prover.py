@@ -6,20 +6,15 @@ class Prover():
         self.T=T
         self.x=x
         self.s=s #statistical security parameter
-    
-    
-    def solve(self):
-        self.y= pow(pow(self.x, 2, self.N), self.T, self.N)
-        return self.y
 
+    def solve(self):
+        self.y= pow(self.x, 2 ** self.T, self.N)
+        return self.y
 
     def get_m(self):
         
         self.m= pow(self.x,pow(2,div(self.T,2),self.N))
-
         return self.m
-
-
 
     def set_rand(self,r):
         self.r =r

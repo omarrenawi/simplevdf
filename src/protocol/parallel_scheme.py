@@ -1,5 +1,4 @@
-from prover import *
-from verifier import *
+from .VDF import *
 from multiprocessing import Process, Queue 
 
 
@@ -19,6 +18,7 @@ class Parallel_scheme():
 		self.q_vf = Queue()
 		self.L_init = list()
 		
+<<<<<<< HEAD
 	def psi(self, x):
 		return x
 			
@@ -32,15 +32,36 @@ class Parallel_scheme():
 		self.q_vf.put(self.vf(pp, y_i_1, y_i, S_i, pi_i)) 
 	
 		
+=======
+	def par_prove(self, a, q):
+		q.put(self.prove(a))
+	
+	def par_vf(self, pp, y_i_1, y_i, S_i, q):
+		q.put(self.vf(pp, y_i_1, y_i, S_i))
+
+>>>>>>> 23a28786ce122d67c2d20ef16bd0f857657f04ba
 	def setup_(self, lambd):
 		return self.setup(lambd)
 	
 	def gen_(self, pp):
 		return self.gen(pp)
 	
+<<<<<<< HEAD
 	def eval_(self, pp, x, T):
 		# for psi(S) = S
 		S = math.ceil(T / 2)
+=======
+	def eval_(self, pp, x, T, S = 0, fst = True):
+		# multiprocessing queue to add π
+		q= Queue()
+
+		if fst:
+			while (True):
+				if (S + self.psi(S) >= T): break
+
+				else: S += 1
+
+>>>>>>> 23a28786ce122d67c2d20ef16bd0f857657f04ba
 		if (S <= 1):
 			y, alpha = self.comp(pp, x, T)
 			return (y, self.L_init)
@@ -56,10 +77,15 @@ class Parallel_scheme():
 			L.insert(0, (y, pi))
 			return (y_, L)
 			
+<<<<<<< HEAD
 	def vf_(self, pp, x, y_in, pi_in, T):
+=======
+	def vf_(self, pp, x, y_in, pi, T):
+>>>>>>> 23a28786ce122d67c2d20ef16bd0f857657f04ba
 		# multiprocessing queue to add b_i
 		n = 0
 		y = []
+<<<<<<< HEAD
 		pi = []	
 		y.append(x);
 		pi.append(x); # dummy, π[0] should be ? empty ? 
@@ -70,6 +96,16 @@ class Parallel_scheme():
 			n += 1
 		S_lst = [None] 
 		s_sum = 0
+=======
+		y.add(x); # TODO: replace add with append except if it should be a set then change the type of y
+		pi = []	
+		for fst, snd in pi:			# parse pi into list of n y[i],pi[i] tupels
+			y.add(fst)
+			pi.add(snd)
+
+		S_lst = []
+		b_lst = []
+>>>>>>> 23a28786ce122d67c2d20ef16bd0f857657f04ba
 		S_lst[0] = T
 		process_b = [None] * n
 		outp = True
