@@ -1,6 +1,6 @@
 from prover import *
 from verifier import *
-from multiprocessing import Process, Queue 
+from multiprocessing import Process, Queue, Manager
 
 
 class Parallel_scheme():
@@ -22,8 +22,9 @@ class Parallel_scheme():
 	def psi(self, x):
 		return x
 			
-	def par_prove(self, N, x, T, y):
-		self.q_eval.put(self.prove(N, x, T, y))
+	def par_prove(self, N, x, T, y, pr):
+		#self.q_eval.put(self.prove(N, x, T, y))
+		pr.put(self.prove(N, x, T, y))
 	
 	def par_prove_alpha(self, alpha):
 		self.q_eval.put(self.prove(alpha))
@@ -42,17 +43,16 @@ class Parallel_scheme():
 		# for psi(S) = S
 		S = math.ceil(T / 2)
 		if (S <= 1):
-			y, alpha = self.comp(pp, x, T)
+			y, alpha = self.evaluate(pp, x, T)
 			return (y, self.L_init)
 		else:
-			y, alpha = self.comp(pp, x, S)
-			#alpha = self.prove(pp, x, T, y)	# not sure with this (why computed at all?)
-			process_pi = Process(target=self.par_prove_alpha, args=(alpha,))
-			#process_pi = Process(target=self.par_prove, args=(pp, x, T, y))
+			pr = Queue()
+			y = self.comp(pp, x, S)
+			process_pi = Process(target=self.par_prove, args=(pp, x, S, y, pr))
 			process_pi.start()
 			y_ , L = self.eval_(pp, y, T - S)
 			process_pi.join()
-			pi = self.q_eval.get()
+			pi = pr.get()
 			L.insert(0, (y, pi))
 			return (y_, L)
 			
@@ -62,7 +62,7 @@ class Parallel_scheme():
 		y = []
 		pi = []	
 		y.append(x);
-		pi.append(x); # dummy, π[0] should be ? empty ? 
+		pi.append(x); 
 		for el in pi_in:		# parse pi into list of n y[i],pi[i] tupels
 			fst, snd = el
 			y.append(fst)
@@ -78,7 +78,7 @@ class Parallel_scheme():
 			# Version only works for psi being id()
 			S_lst.append(math.ceil((T - s_sum) / 2))
 			s_sum += S_lst[i]
-			process_b[i-1] = Process(target=self.par_vf, args=(pp, y[i-1], y[i], S_lst[i], pi[-i]))
+			process_b[i-1] = Process(target=self.par_vf, args=(pp, y[i-1], y[i], S_lst[i], pi[i]))
 			process_b[i-1].start()
 		for i in range(1, n+1):
 			process_b[i-1].join()

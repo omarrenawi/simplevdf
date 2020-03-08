@@ -90,7 +90,7 @@ def verify(N, x, T, y, pi):
 
     for i in range(t):
         # debug print for index out of range error
-        # print("len of pi :", len(pi), "but tried to access with t :", t)
+        #print("max index of pi :", len(pi) - 1, "but tried to access with t :", i, "to", t)
         tmp = "{}{}{}{}".format(xn, div(T, 2**(i)), yn, pi[i])
         h = hashlib.sha256()
         h.update(tmp.encode())

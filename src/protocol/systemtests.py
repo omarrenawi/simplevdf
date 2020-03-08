@@ -40,7 +40,8 @@ def detailed_output(T, N, x):
     
     
     
-    parallel = Parallel_scheme( T, setup, gen, evaluate, vf, prov_mod, evaluate)
+    #parallel = Parallel_scheme( T, setup, gen, evaluate, vf, prov_mod, evaluate)
+    parallel = Parallel_scheme( T, setup, gen, evaluate, vf, prov, comp)
     
     print("(parallel) Solving & Proving...")
     start_time = time.time()
@@ -52,7 +53,7 @@ def detailed_output(T, N, x):
     start_time = time.time()
     print(parallel.vf_(N, x, y_parallel, pi_parallel, T), "in", time.time() - start_time)
 
-T = 2 ** 26
+T = 2 ** 25
 N = setup(64)
 x = gen(N)
 
