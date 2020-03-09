@@ -12,8 +12,8 @@ To execute only the simple VDF run
 ~$ python3 src/protocol/systemtests.py t -s
 ```
 respectively for the tight VDF
-~$ ```console
-python3 src/protocol/systemtests.py t -t
+```console
+~$ python3 src/protocol/systemtests.py t -t
 ```
 ## Comparison table
 To get a table with preset range of t comparing both VDFs run 
