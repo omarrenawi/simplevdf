@@ -23,7 +23,6 @@ class Parallel_scheme():
 		return x
 			
 	def par_prove(self, N, x, T, y, pr):
-		#self.q_eval.put(self.prove(N, x, T, y))
 		pr.put(self.prove(N, x, T, y))
 	
 	def par_prove_alpha(self, alpha):
@@ -40,7 +39,7 @@ class Parallel_scheme():
 		return self.gen(pp)
 	
 	def eval_(self, pp, x, T):
-		# for psi(S) = S
+		# only works for psi(S) = S
 		S = math.ceil(T / 2)
 		if (S <= 1):
 			y, alpha = self.evaluate(pp, x, T)
@@ -57,12 +56,11 @@ class Parallel_scheme():
 			return (y_, L)
 			
 	def vf_(self, pp, x, y_in, pi_in, T):
-		# multiprocessing queue to add b_i
 		n = 0
 		y = []
 		pi = []	
 		y.append(x);
-		pi.append(x); 
+		pi.append(x); 			# pi[0] is not used/needed anyway
 		for el in pi_in:		# parse pi into list of n y[i],pi[i] tupels
 			fst, snd = el
 			y.append(fst)
@@ -75,7 +73,7 @@ class Parallel_scheme():
 		outp = True
 		
 		for i in range(1, n+1):
-			# Version only works for psi being id()
+			# only works for psi(S) = S
 			S_lst.append(math.ceil((T - s_sum) / 2))
 			s_sum += S_lst[i]
 			process_b[i-1] = Process(target=self.par_vf, args=(pp, y[i-1], y[i], S_lst[i], pi[i]))

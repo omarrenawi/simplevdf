@@ -7,16 +7,6 @@ from tabulate import tabulate
 from VDF import *
 from parallel_scheme import *
 
-
-"""
-for i in range(100):
-    x = gen(N)
-    assert assert_mem(x, N)
-    y = gen(N)
-    assert assert_mem(y, N)
-    tmp = abs ((x * y) % N)
-    assert assert_mem(tmp, N)
-"""
 def vf(pp, y_p, y, S_i, pi_i) :
     return verify(N, y_p, S_i, y, pi_i) 
     
@@ -44,10 +34,7 @@ def simple_VDF(T, N, x):
         print("... Simple output accepted in", time.time() - start_time)
     
 def tight_VDF(T, N, x): 
-    
-    #parallel = Parallel_scheme( T, setup, gen, evaluate, vf, prov_mod, evaluate)
     parallel = Parallel_scheme( T, setup, gen, evaluate, vf, prov, comp)
-    
     print("(parallel) Solving & Proving...")
     start_time = time.time()
     y_parallel, pi_parallel = parallel.eval_(N, x, T)
@@ -108,7 +95,8 @@ if __name__ == "__main__":
     N = setup(64)
     x = gen(N)
     max_t = 1000
-                    # argparse section
+    
+    # argparse section
     vdf_parser = argparse.ArgumentParser(description='Simple and tight VDF implementation')
     vdf_parser.add_argument('t_parameter', metavar='t', type=int, help='Timing parameter t -> using T=2^t')
     vdf_parser.add_argument('-s', '--simple', action='store_true', help="just compute simple VDF")

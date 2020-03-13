@@ -30,5 +30,8 @@ will print a simple usage guide
 
 - The VDFs with t=30 will already take several minutes to be computed. Hence we suggest to not run the implementation with much higher values of t just for demonstration purposes. 
 
+### Contribution
+The source code was written by Omar Renawi and Jan Cloos. While Jan implemented "Tight VDF" (i.e. parallel_scheme.py) and the testing/command line interface (i.e. systemtests.py), Omar was responsible for the "Simple VDF" implementation (i.e. all other files in src/protocol).
+
 
 
