@@ -51,7 +51,6 @@ def mul(a, b, N):
 
 def div(a, b):
     return a // b
-   # return math.ceil(a / b)
 
 
 # represent x as {−(N − 1)/2, . . . , (N − 1)/2}
@@ -84,7 +83,6 @@ def reject():
 
 
 def accept():
-    #print("ACCEPTED")
     return True
 
 
