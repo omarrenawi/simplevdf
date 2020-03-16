@@ -2,7 +2,7 @@ from utils import *
 
 import hashlib
 
-s = 2  # statistical security parameter
+s = 64  # statistical security parameter
 
 
 def setup(s):
